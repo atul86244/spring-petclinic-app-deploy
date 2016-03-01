@@ -17,6 +17,11 @@ include_recipe 'tomcat'
 tomcat_webapps_dir = node['tomcat']['webapp_dir']
 tomcat_service_name = node['tomcat']['base_instance']
 
+# Stop Tomcat
+service tomcat_service_name do
+  action :stop
+end
+
 # Clean webapps folder
 directory "#{tomcat_webapps_dir}/petclinic" do
   action :delete
@@ -37,9 +42,5 @@ execute 'rename_petclinic.war.zip' do
   cwd tomcat_webapps_dir
   action :nothing
   notifies :restart, "service[#{tomcat_service_name}]"
-end
-
-service tomcat_service_name do
-  action :nothing
 end
 
